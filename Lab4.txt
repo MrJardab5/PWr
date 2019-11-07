@@ -1,0 +1,58 @@
+Jaros³aw D¹browski 226613
+
+Inode jest to struktura danych w systemach Unix, która opisuje obiekt (typ pliku, uprawnienia, UID, GID, rozmiar, date ostatniej modyfikacji lub dostêpu, numer linku (soft/hard), lokalizacje na dysku oraz metadane. 
+
+Aby sprawdziæ inode plik.txt u¿y³em komendy "ls -li plik.txt", w rezultacie otrzyma³em
+40396 -rw-r--r-- 1 pi pi 0 wrz 26 05:37 plik.txt
+
+
+
+W celu utworzenia softlinku u¿y³em komendy:
+
+pi@JDabrowski:~/tmp $ ln -s plik.txt softlink.txt
+pi@JDabrowski:~/tmp $ ls
+plik.txt  softlink.txt
+
+W celu utworzenia hardlinku u¿y³em komendy:
+pi@JDabrowski:~/tmp $ ln plik.txt hardlink.txt
+pi@JDabrowski:~/tmp $ ls
+hardlink.txt  plik.txt  softlink.txt
+
+Sprawdzenie inode plików:
+
+pi@JDabrowski:~/tmp $ ls -li hardlink.txt
+40396 -rw-r--r-- 2 pi pi 26 wrz 26 05:54 hardlink.txt
+pi@JDabrowski:~/tmp $ ls -li softlink.txt
+43758 lrwxrwxrwx 1 pi pi 8 wrz 26 06:03 softlink.txt -> plik.txt
+pi@JDabrowski:~/tmp $ ls -li plik.txt
+40396 -rw-r--r-- 2 pi pi 26 wrz 26 05:54 plik.txt
+
+
+Po przeniesieniu plik.txt do innego folderu:
+pi@JDabrowski:~/tmp $ ls -li hardlink.txt
+40396 -rw-r--r-- 2 pi pi 26 wrz 26 05:54 hardlink.txt
+pi@JDabrowski:~/tmp $ ls -li softlink.txt
+43758 lrwxrwxrwx 1 pi pi 8 wrz 26 06:03 softlink.txt -> plik.txt
+
+Z hardlinkiem nie sta³o siê nic, natomiast softlink przesta³ dzia³aæ.
+
+
+W celu zmiany u¿ytkownika u¿y³em polecenia sudo chown
+
+pi@JDabrowski:~/tmp/tmp2 $ sudo chown jarek plik.txt
+
+40396 -rw-r--r-- 2 jarek
+
+W celu zmiany grupy utworzy³em grupê poleceniem sudo groupadd a nastepnie przenioslem plik chgrp.
+
+40396 -rw-r--r-- 2 jarek edytorzy 26 wrz 26 05:54 plik.txt
+
+w celu zmiany uprawnieñ u¿y³em komendy chmod
+
+pi@JDabrowski:~/tmp/tmp2 $ sudo chmod 470 plik.txt
+
+
+pi@JDabrowski:~/tmp/tmp2 $ ls -li plik.txt
+40396 -r--rwx--- 2 jarek edytorzy 26 wrz 26 05:54 plik.txt
+pi@JDabrowski:~/tmp/tmp2 $
+
